@@ -2,4 +2,4 @@ backend/node_modules
 backend/.env
 backend/.env.keys
 backend/.env.test
-backend/package-lock.json
+*/package-lock.json
