@@ -1,9 +1,11 @@
 import { useSelector } from "react-redux";
 import Nav from "../components/Nav";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
 import Button from "../components/Button";
 import { RiShare2Line } from "react-icons/ri";
+import { motion, useAnimation } from "motion/react";
+import SearchInput from "../components/SearchInput";
 
 const qrCode = new QRCodeStyling({
   width: 280,
@@ -26,21 +28,57 @@ const qrCode = new QRCodeStyling({
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
-  const canvasRef = useRef(null);
+  const qrRef = useRef(null);
+  const [isSwiped, setIsSwiped] = useState(false);
 
   useEffect(() => {
     qrCode.update({ data: user.upiId });
-    qrCode.append(canvasRef.current);
+    qrCode.append(qrRef.current);
   }, [user.upiId]);
 
+  const controls = useAnimation();
+  const sheetHeight = 550;
+
+  const handleDragEnd = (e, info) => {
+    const { velocity, point } = info;
+
+    if (velocity.y > 100 || point.y > sheetHeight / 2) {
+      controls.start({
+        y: sheetHeight,
+        transition: { type: "tween", stiffness: 200 },
+      });
+      setIsSwiped(true);
+    } else {
+      controls.start({ y: 0, transition: { type: "tween", stiffness: 200 } });
+      setIsSwiped(false);
+    }
+  };
+
   return (
-    <div className="h-screen relative w-full  bg-linear-160 from-[#A27EFF58] from-0% via-transparent via-50% to-[#00AFFF58] to-100%">
+    <div
+      id="ap-home"
+      className="h-screen relative w-full overflow-hidden bg-linear-160 from-[#A27EFF58] from-0% via-transparent via-50% to-[#00AFFF58] to-100%">
       <Nav profilePic={user.profilePic} />
-      <h2 className="text-center text-3xl font-urbanist font-semibold text-white mt-3 z-10">
+      <motion.h2
+        initial={{
+          translateY: "150px",
+        }}
+        animate={{
+          translateY: isSwiped ? 0 : "150px",
+        }}
+        transition={{
+          type: "tween",
+        }}
+        className="text-center text-3xl font-urbanist font-semibold text-white mt-3">
         Scan to pay
-      </h2>
+      </motion.h2>
       <div id="ap-qr-code" className="mt-7">
-        <div className="flex gap-3 items-center justify-center">
+        <motion.div
+          initial={{ translateY: "80px" }}
+          animate={{
+            translateY: isSwiped ? 0 : "80px",
+          }}
+          className="flex gap-3 items-center justify-center">
           <div className="overflow-hidden h-12 w-12 rounded-full bg-white">
             <img src={user.profilePic} alt="profile" />
           </div>
@@ -52,10 +90,10 @@ const Home = () => {
               {user.upiId}
             </h4>
           </div>
-        </div>
-        <div className="flex w-full items-center justify-center mt-7 ">
+        </motion.div>
+        <div className="flex w-full items-center justify-center mt-7 relative z-1">
           <div
-            ref={canvasRef}
+            ref={qrRef}
             className="h-75 w-75 bg-[#0B0F1A] flex items-center justify-center rounded-4xl"></div>
         </div>
         <Button
@@ -68,9 +106,18 @@ const Home = () => {
           children={<RiShare2Line />}
         />
       </div>
-      <div className="h-[calc(100vh-88px)] w-full bg-[#ffffff20] backdrop-blur-sm absolute top-22 rounded-t-3xl">
+      <motion.div
+        id="ap-menu"
+        drag="y"
+        dragConstraints={{ top: 0, bottom: sheetHeight }}
+        dragElastic={0.05}
+        dragMomentum={false}
+        onDragEnd={handleDragEnd}
+        animate={controls}
+        className="h-[calc(100vh+10px)] w-full bg-[#ffffff20] backdrop-blur-sm absolute top-22 rounded-t-3xl z-10 px-6">
         <div className="mx-auto w-30 h-1.5 rounded-full bg-black mt-3"></div>
-      </div>
+        <SearchInput />
+      </motion.div>
     </div>
   );
 };

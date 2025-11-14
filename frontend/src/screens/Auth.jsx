@@ -156,7 +156,7 @@ const Auth = () => {
                 text="Log in"
                 fontsize="text-xl"
                 color="bg-[#00AFFF]"
-                hover="hover:bg-[#5AC8FA]"
+                className={"rounded-full"}
                 id={"ap-login-button"}
               />
               <p className="text-sm font-lexend font-medium mt-1">
@@ -183,7 +183,7 @@ const Auth = () => {
               text="Log in"
               fontsize="text-xl"
               color="bg-[#00AFFF]"
-              hover="hover:bg-[#5AC8FA]"
+              className={"rounded-full"}
               onclick={(e) => {
                 setTranslateX("0");
               }}
@@ -192,6 +192,7 @@ const Auth = () => {
             <Button
               text="Sign up"
               fontsize="text-xl"
+              className={"rounded-full"}
               onclick={(e) => {
                 setTranslateX("-50%");
               }}
@@ -305,7 +306,7 @@ const Auth = () => {
               text={"Create account"}
               fontsize="text-xl"
               color="bg-[#00AFFF]"
-              hover="hover:bg-[#5AC8FA]"
+              className={"rounded-full"}
               id={"ap-signup-button"}
             />
           </div>
