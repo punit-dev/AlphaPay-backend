@@ -8,7 +8,7 @@ const { comparePass } = require("../../util/hash");
 const checkValidation = require("../../util/checkValidation");
 
 /**
- * @route   POST /api/clients/auth/register
+ * @route   POST /api/users/auth/register
  * @desc    Registers a new user and sends OTP for email verification
  * @access  Public
  */
@@ -52,7 +52,7 @@ const register = asyncHandler(async (req, res) => {
     otp: otp,
   });
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "development") {
     await mailer.sendOTP(email, otp);
   }
 
@@ -71,7 +71,7 @@ const register = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   POST /api/clients/auth/verify-otp
+ * @route   POST /api/users/auth/verify-otp
  * @desc    Verifies the OTP and activates the user's email
  * @access  Public
  */
@@ -114,7 +114,7 @@ const verifyOTP = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   POST /api/clients/auth/resend-otp
+ * @route   POST /api/users/auth/resend-otp
  * @desc    Re-sends a new OTP to the user's email
  * @access  Public
  */
@@ -139,7 +139,7 @@ const resendOTP = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "development") {
     await mailer.sendOTP(email, otp);
   }
 
@@ -153,7 +153,7 @@ const resendOTP = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   POST /api/clients/auth/login
+ * @route   POST /api/users/auth/login
  * @desc    Logs in the user using email/username and password
  * @access  Public
  */
@@ -208,7 +208,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   POST /api/clients/auth/logout
+ * @route   POST /api/users/auth/logout
  * @desc    Logs the user out by clearing the cookie
  * @access  Privet
  */

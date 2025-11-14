@@ -29,7 +29,7 @@ This document provides a comprehensive guide to the RESTful APIs available in th
 
 #### Register an user
 
-**Endpoint:** `POST /auth`  
+**Endpoint:** `POST /auth/register`  
 **Access:** Public<br>
 **Description:** Register a new user.
 
