@@ -65,7 +65,7 @@ const register = asyncHandler(async (req, res) => {
   res.status(201).json({
     message: "User created successfully",
     user: newUser,
-    authToken,
+    token: authToken,
     otp: otp,
   });
 });

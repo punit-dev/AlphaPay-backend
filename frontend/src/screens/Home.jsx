@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Nav from "../components/Nav";
 import { useEffect, useRef, useState } from "react";
 import QRCodeStyling from "qr-code-styling";
@@ -6,6 +6,9 @@ import Button from "../components/Button";
 import { RiShare2Line } from "react-icons/ri";
 import { motion, useAnimation } from "motion/react";
 import SearchInput from "../components/SearchInput";
+import { logout } from "../redux/authSlice";
+import { useNavigate } from "react-router";
+import Loading from "./Loading";
 
 const qrCode = new QRCodeStyling({
   width: 280,
@@ -27,9 +30,11 @@ const qrCode = new QRCodeStyling({
 });
 
 const Home = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user, loading } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const qrRef = useRef(null);
   const [isSwiped, setIsSwiped] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     qrCode.update({ data: user.upiId });
@@ -51,6 +56,14 @@ const Home = () => {
     } else {
       controls.start({ y: 0, transition: { type: "tween", stiffness: 200 } });
       setIsSwiped(false);
+    }
+  };
+
+  const logoutCall = async () => {
+    const res = await dispatch(logout());
+
+    if (logout.fulfilled.match(res)) {
+      navigate("/authentication");
     }
   };
 
@@ -117,7 +130,9 @@ const Home = () => {
         className="h-[calc(100vh+10px)] w-full bg-[#ffffff20] backdrop-blur-sm absolute top-22 rounded-t-3xl z-10 px-6">
         <div className="mx-auto w-30 h-1.5 rounded-full bg-black mt-3"></div>
         <SearchInput />
+        <Button text="Log out" onclick={logoutCall} />
       </motion.div>
+      {loading ? <Loading /> : null}
     </div>
   );
 };

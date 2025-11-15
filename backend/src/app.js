@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 
 const cookieParser = require("cookie-parser");
 
@@ -60,6 +61,13 @@ app.use(hpp());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  next();
+});
+
+app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
 app.use(
   "/api/users",

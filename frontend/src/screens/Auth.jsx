@@ -29,7 +29,7 @@ const Auth = () => {
 
   const [verificationOTP, setVerificationOTP] = useState("");
 
-  const { loading, error, otp } = useSelector((state) => state.auth);
+  const { loading, error, otp, user } = useSelector((state) => state.auth);
 
   const loginCall = async (e) => {
     e.preventDefault();
@@ -71,7 +71,7 @@ const Auth = () => {
   const verifyOtpCall = async (e) => {
     e.preventDefault();
     const res = await dispatch(
-      verifyOtp({ otp: verificationOTP, email: signupEmail })
+      verifyOtp({ otp: verificationOTP, email: user?.email })
     );
 
     if (verifyOtp.fulfilled.match(res)) {
@@ -82,7 +82,7 @@ const Auth = () => {
 
   const resendOtpCall = async (e) => {
     e.preventDefault();
-    const res = await dispatch(resendOtp(signupEmail));
+    const res = await dispatch(resendOtp(user?.email));
 
     if (resendOtp.fulfilled.match(res)) {
       console.log("its is send");
@@ -156,7 +156,7 @@ const Auth = () => {
                 text="Log in"
                 fontsize="text-xl"
                 color="bg-[#00AFFF]"
-                className={"rounded-full"}
+                className={"rounded-full text-[#0B0F1A]"}
                 id={"ap-login-button"}
               />
               <p className="text-sm font-lexend font-medium mt-1">
@@ -183,7 +183,7 @@ const Auth = () => {
               text="Log in"
               fontsize="text-xl"
               color="bg-[#00AFFF]"
-              className={"rounded-full"}
+              className={"rounded-full text-[#0B0F1A]"}
               onclick={(e) => {
                 setTranslateX("0");
               }}
@@ -192,7 +192,7 @@ const Auth = () => {
             <Button
               text="Sign up"
               fontsize="text-xl"
-              className={"rounded-full"}
+              className={"rounded-full text-[#0B0F1A]"}
               onclick={(e) => {
                 setTranslateX("-50%");
               }}
@@ -306,7 +306,7 @@ const Auth = () => {
               text={"Create account"}
               fontsize="text-xl"
               color="bg-[#00AFFF]"
-              className={"rounded-full"}
+              className={"rounded-full text-[#0B0F1A]"}
               id={"ap-signup-button"}
             />
           </div>
@@ -323,7 +323,7 @@ const Auth = () => {
             Verify your email
           </h2>
           <p className="text-sm font-lexend font-medium mt-4">
-            please enter 6 digit code sent to {`${signupEmail}\n`} (No email OTP
+            please enter 6 digit code sent to {`${user?.email}\n`} (No email OTP
             (Demo project). Use this OTP to verify: {otp})
           </p>
           <div className="mt-5 flex flex-col gap-5">
@@ -344,7 +344,7 @@ const Auth = () => {
               text="Verify OTP"
               fontsize="text-xl"
               color="bg-[#00AFFF]"
-              hover="hover:bg-[#5AC8FA]"
+              className={"rounded-full text-[#0B0F1A]"}
               id={"ap-verify-button"}
             />
             <div

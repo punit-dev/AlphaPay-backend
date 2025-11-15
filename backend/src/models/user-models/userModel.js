@@ -2,6 +2,19 @@ const mongoose = require("mongoose");
 const { hashPass } = require("../../util/hash");
 const encrypt = require("mongoose-encryption");
 
+const avatars = [
+  "http://localhost:3000/assets/avatar/male1.png",
+  "http://localhost:3000/assets/avatar/female1.png",
+  "http://localhost:3000/assets/avatar/male2.png",
+  "http://localhost:3000/assets/avatar/female2.png",
+  "http://localhost:3000/assets/avatar/male3.png",
+  "http://localhost:3000/assets/avatar/female3.png",
+  "http://localhost:3000/assets/avatar/male4.png",
+  "http://localhost:3000/assets/avatar/female4.png",
+  "http://localhost:3000/assets/avatar/male5.png",
+  "http://localhost:3000/assets/avatar/female5.png",
+];
+
 const UserSchema = new mongoose.Schema(
   {
     socketId: {
@@ -65,7 +78,8 @@ const UserSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: "https://cdn-icons-png.flaticon.com/512/6596/6596121.png",
+      enum: avatars,
+      default: () => avatars[Math.floor(Math.random() * avatars.length)],
     },
     otpToken: {
       type: String,

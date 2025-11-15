@@ -50,7 +50,7 @@ export const verifyOtp = createAsyncThunk(
       if (res.status !== 200) throw Error(res.data?.message);
       return res.data?.message;
     } catch (err) {
-      return rejectWithValue(err.response?.data.message);
+      return rejectWithValue(err?.response.data.message);
     }
   }
 );
@@ -68,7 +68,25 @@ export const resendOtp = createAsyncThunk(
       if (res.status !== 200) throw Error(res.data?.message);
       return res.data?.otp;
     } catch (err) {
-      return rejectWithValue(err.response?.data.message);
+      return rejectWithValue(err?.response.data.message);
+    }
+  }
+);
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/auth/logout`,
+        null,
+        { withCredentials: true }
+      );
+
+      if (res.status != 200) throw Error(res.data?.message);
+      return res.data.message;
+    } catch (err) {
+      rejectWithValue(err?.response.data.message);
     }
   }
 );
@@ -83,10 +101,6 @@ const authSlice = createSlice({
     otp: null,
   },
   reducers: {
-    logout: (state) => {
-      state.user = null;
-      localStorage.removeItem("user");
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -158,9 +172,23 @@ const authSlice = createSlice({
       .addCase(resendOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.message = action.payload;
+        localStorage.removeItem("user");
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { logout, clearError, clearMessage, clearOtp } = authSlice.actions;
+export const { clearError, clearMessage, clearOtp } = authSlice.actions;
 export default authSlice.reducer;
