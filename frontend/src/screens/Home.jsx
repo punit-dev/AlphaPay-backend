@@ -109,15 +109,6 @@ const Home = () => {
             ref={qrRef}
             className="h-75 w-75 bg-[#0B0F1A] flex items-center justify-center rounded-4xl"></div>
         </div>
-        <Button
-          id={"ap-share-button"}
-          text="Share QR"
-          color="bg-linear-60 from-[#00AFFF] to-[#A27EFF]"
-          className={
-            "max-w-45 rounded-2xl flex text-2xl items-center justify-center gap-3 mx-auto mt-5"
-          }
-          children={<RiShare2Line />}
-        />
       </div>
       <motion.div
         id="ap-menu"

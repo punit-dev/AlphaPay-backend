@@ -13,6 +13,17 @@ route.put(
   UserController.updateUser
 );
 route.put(
+  "/update-profile-pic",
+  userValidator.validateUpdateProfilePic,
+  authMiddleware,
+  UserController.updateProfilePic
+);
+route.get(
+  "/share-profile-avatar-options",
+  authMiddleware,
+  UserController.shareProfileAvatarOptions
+);
+route.put(
   "/update-pass",
   userValidator.validateUpdatePass,
   authMiddleware,

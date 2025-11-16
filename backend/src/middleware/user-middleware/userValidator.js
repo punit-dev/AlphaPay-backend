@@ -43,3 +43,11 @@ exports.validateSearchQuery = [
     .isString()
     .withMessage("Search must be a valid string"),
 ];
+
+exports.validateUpdateProfilePic = [
+  body("profileURL")
+    .notEmpty()
+    .withMessage("Profile URL is required")
+    .isURL()
+    .withMessage("Profile URL must be a valid URL"),
+];

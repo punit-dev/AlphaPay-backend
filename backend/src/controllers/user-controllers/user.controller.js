@@ -10,7 +10,7 @@ const { createToken } = require("../../util/token");
 const mailer = require("../../util/mailer");
 
 /**
- * @route   GET /api/clients/users/profile
+ * @route   GET /api/users/profile
  * @desc    Get user profile information
  * @access  Privet
  */
@@ -20,7 +20,7 @@ const userProfile = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   PUT /api/clients/users/update
+ * @route   PUT /api/users/update
  * @desc    Update user profile
  * @access  Privet
  */
@@ -74,7 +74,61 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   PUT /api/clients/users/update-pass
+ * @route   GET /api/users/profile-avatar-options
+ * @desc    Get profile avatar URL options
+ * @access  privet
+ */
+
+const shareProfileAvatarOptions = asyncHandler(async (req, res) => {
+  const profileAvatarURLOptions = [
+    "http://localhost:3000/assets/avatar/male1.png",
+    "http://localhost:3000/assets/avatar/female1.png",
+    "http://localhost:3000/assets/avatar/male2.png",
+    "http://localhost:3000/assets/avatar/female2.png",
+    "http://localhost:3000/assets/avatar/male3.png",
+    "http://localhost:3000/assets/avatar/female3.png",
+    "http://localhost:3000/assets/avatar/male4.png",
+    "http://localhost:3000/assets/avatar/female4.png",
+    "http://localhost:3000/assets/avatar/male5.png",
+    "http://localhost:3000/assets/avatar/female5.png",
+  ];
+
+  return res.status(200).json({
+    message: "Profile Avatar Options",
+    options: profileAvatarURLOptions,
+  });
+});
+
+/**
+ * @route   PUT /api/users/update-profile-pic
+ * @desc    Update user profile picture
+ * @access  Privet
+ */
+const updateProfilePic = asyncHandler(async (req, res) => {
+  // Validate request
+  const isNotValid = checkValidation(req);
+
+  if (isNotValid) {
+    res.status(400);
+    throw isNotValid;
+  }
+
+  const user = req.user;
+  const { profileURL } = req.body;
+
+  if (!profileURL || profileURL == user.profilePic) {
+    res.status(400);
+    throw new Error("Profile URL is required or no change detected.");
+  }
+
+  user.profilePic = profileURL;
+  await user.save();
+
+  return res.status(200).json({ message: "Profile Picture Updated", user });
+});
+
+/**
+ * @route   PUT /api/users/update-pass
  * @desc    Update the user login password
  * @access  Privet
  */
@@ -103,7 +157,7 @@ const updatePass = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   PUT /api/clients/users/update-pin
+ * @route   PUT /api/users/update-pin
  * @desc    Update the user UPI Pin
  * @access  Privet
  */
@@ -130,7 +184,7 @@ const updateUpiPin = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   DELETE /api/clients/users/delete
+ * @route   DELETE /api/users/delete
  * @desc    Delete user and related data
  * @access  Privet
  */
@@ -154,7 +208,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   GET /api/clients/users/search?query=
+ * @route   GET /api/users/search?query=
  * @desc    Search an users using upiID OR phoneNumber
  * @access  Privet
  */
@@ -198,4 +252,6 @@ module.exports = {
   updatePass,
   updateUpiPin,
   search,
+  shareProfileAvatarOptions,
+  updateProfilePic,
 };
