@@ -24,12 +24,11 @@ const isDateCurrent = (date) => {
   const givenMonth = expiryMonth;
 
   if (givenYear < todayYear) {
-    return isYearExpired;
+    return true;
   }
 
   if (givenYear === todayYear && givenMonth < todayMonth) return true;
   return false;
- 
 };
 
 module.exports = isDateCurrent;

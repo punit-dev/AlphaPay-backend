@@ -70,7 +70,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
   await user.save();
 
-  return res.status(200).json({ message: "User Updated", user, otp: otp });
+  return res.status(200).json({ message: "User Updated", user });
 });
 
 /**

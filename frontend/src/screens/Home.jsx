@@ -9,6 +9,7 @@ import SearchInput from "../components/SearchInput";
 import { logout } from "../redux/authSlice";
 import { useNavigate } from "react-router";
 import Loading from "./Loading";
+import Block from "../components/Block";
 
 const qrCode = new QRCodeStyling({
   width: 280,
@@ -121,6 +122,7 @@ const Home = () => {
         className="h-[calc(100vh+10px)] w-full bg-[#ffffff20] backdrop-blur-sm absolute top-22 rounded-t-3xl z-10 px-6">
         <div className="mx-auto w-30 h-1.5 rounded-full bg-black mt-3"></div>
         <SearchInput />
+        <Block className={"my-5"} />
         <Button text="Log out" onclick={logoutCall} />
       </motion.div>
       {loading ? <Loading /> : null}
