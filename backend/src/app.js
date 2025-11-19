@@ -17,16 +17,12 @@ const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
 
-if (process.env.LOAD_TEST === "true") {
-  app.use((req, res, next) => next());
-} else {
-  app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 100,
-    })
-  );
-}
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+  })
+);
 
 app.use(
   helmet({
