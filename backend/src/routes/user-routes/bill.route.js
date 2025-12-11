@@ -11,7 +11,7 @@ route.post(
   authMiddleware,
   BillController.registerBill
 );
-route.get("/get-bills", authMiddleware, BillController.getBills);
+route.get("/", authMiddleware, BillController.getBills);
 route.put(
   "/update-bill",
   billValidator.updateBillValidator,

@@ -19,7 +19,7 @@ route.put(
   UserController.updateProfilePic
 );
 route.get(
-  "/share-profile-avatar-options",
+  "/avatar-options",
   authMiddleware,
   UserController.shareProfileAvatarOptions
 );

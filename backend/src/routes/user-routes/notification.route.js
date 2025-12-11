@@ -10,7 +10,7 @@ const {
   deleteNotification,
 } = require("../../controllers/user-controllers/notification.controller");
 
-route.get("/get-notifications", authMiddleware, getNotifications);
+route.get("/", authMiddleware, getNotifications);
 route.put(
   "/mark-as-read",
   query("notificationId")

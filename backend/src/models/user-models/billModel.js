@@ -39,7 +39,7 @@ const BillSchema = new mongoose.Schema({
   },
 });
 
-mongoose.set("toJSON", {
+BillSchema.set("toJSON", {
   transform: (doc, ret) => {
     delete ret.__v;
     return ret;

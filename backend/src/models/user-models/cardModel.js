@@ -40,7 +40,7 @@ CardSchema.plugin(encrypt, {
   encryptedFields: ["cardNumber", "CVV", "expiryDate"],
 });
 
-mongoose.set("toJSON", {
+CardSchema.set("toJSON", {
   transform: (doc, ret) => {
     delete ret.__v;
     return ret;

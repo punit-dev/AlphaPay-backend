@@ -11,7 +11,7 @@ route.post(
   authMiddleware,
   CardController.registerCard
 );
-route.get("/get-cards", authMiddleware, CardController.getCards);
+route.get("/", authMiddleware, CardController.getCards);
 route.delete(
   "/delete-card",
   cardValidator.deleteCardValidator,

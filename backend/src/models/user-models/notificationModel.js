@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const notificationSchema = new mongoose.Schema(
+const NotificationSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,13 +31,13 @@ const notificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-mongoose.set("toJSON", {
+NotificationSchema.set("toJSON", {
   transform: (doc, ret) => {
     delete ret.__v;
     return ret;
   },
 });
 
-const notificationModel = mongoose.model("notification", notificationSchema);
+const notificationModel = mongoose.model("notification", NotificationSchema);
 
 module.exports = notificationModel;

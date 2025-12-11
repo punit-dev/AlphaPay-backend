@@ -84,7 +84,7 @@ const TransactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-mongoose.set("toJSON", {
+TransactionSchema.set("toJSON", {
   transform: (doc, ret) => {
     delete ret.__v;
     return ret;

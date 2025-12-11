@@ -23,6 +23,6 @@ route.post(
   TranController.walletRecharge
 );
 route.get("/verify-transaction", TranController.verifyTransaction);
-route.get("/all-transaction", TranController.getTransaction);
+route.get("/", TranController.getTransaction);
 
 module.exports = route;

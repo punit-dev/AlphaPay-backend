@@ -1,89 +1,99 @@
 # 💸 AlphaPay - Simplifying Digital Payment
 
-**AlphaPay** is a secure and modern payment app backend built with the MEN stack (MongoDB, Express, Node.js). It simulates real-world digital transactions using a custom demo payment gateway and includes user management, payments, and transaction history — all handled through robust backend APIs.
-
-> ⚙️ Backend: Node.js, Express.js, MongoDB<br>
+_A secure and modern digital payment backend built with Node.js, Express, MongoDB, and JWT._<br><br>
+AlphaPay is a full-featured backend system that simulates real-world digital payments (similar to UPI apps). It includes secure authentication, wallet management, transaction handling, bill payments, admin dashboard, and **payment receipt verification** to prevent fake transaction proofs.
 
 ---
 
 ## 🚀 Features
 
-AlphaPay is a secure and modern UPI-based payment system that includes a wide range of core functionalities. The backend currently supports the following features:
+### 🔐 User Features
 
-### ✅ Completed Backend Features
+- JWT-based authentication & role-based access
+- Email OTP verification
+- Secure encrypted data (UPI PIN, password, DOB, etc.)
+- Wallet system with balance tracking
+- Send/receive money via UPI ID and Phone number
+- Bill payment support
+- Add & manage debit/credit cards
+- Transaction history
+- Notification system
 
-- **🔐 User Authentication**
+### 🛡️ Security Highlights
 
-  - Supports secure login and registration using email-based OTP verification.
-  - JWT-based session management ensures secure access to protected routes.
-  - Built-in checks for email verification before account creation.
+- Password & UPI PIN encryption using `bcrypt` / `mongoose-encryption`
+- Request validation using custom middlewares
+- Centralized error handling
+- OTP expiration & one-time-use logic
+- Rate-safety around transactions
 
-- **📧 OTP System**
+### 🧾 Payment Receipt Verification (Special Feature)
 
-  - OTP is sent to the user’s email with expiration handling.
-  - Secure verification flow with one-time usage logic.
-
-- **🔒 Encrypted Sensitive Data**
-
-  - Fields like password, phone number, UPI PIN, and DOB are encrypted using `mongoose-encryption` to maintain data privacy.
-
-- **💳 Virtual UPI ID Management**
-
-  - Generates unique virtual UPI ID upon registration.
-  - UPI ID is used across the app for all transactions and user identification.
-
-- **💸 Send Money**
-
-  - Users can send money via virtual UPI ID or linked phone number.
-  - Backend handles all transaction logic, including balance validation.
-
-- **👤 Profile Management**
-
-  - Update personal details like name, username, phone number, and date of birth.
-  - Includes input validation and secure update flow.
-
-- **📂 Transaction History**
-
-  - Stores and fetches a complete list of user transactions.
-  - Transactions are timestamped and categorized (sent/received).
-
-- **💳 Pay via Debit/Credit Card**
-
-  - Supports secure payment via linked card data (simulated for now).
-  - Validates card details before processing payment.
-
-- **💰 Wallet Management**
-  - Users can view and manage their wallet balance.
-  - Supports adding and performing transactions via wallet balance.
-
----
-
-### 🔐 Security Highlights
-
-- Mongoose encryption ensures sensitive fields are never stored in plaintext.
-- All API responses are structured with appropriate status codes and validation error handling.
-- Secure token handling for OTP, authentication, and session management.
+To prevent fraud, AlphaPay includes **transaction receipt verification.**<br>
+If a payer sends a fake screenshot as "proof of payment," the payee can verify the receipt's authenticity using the AlphaPay transaction ID.
+This simulates a real payment-checking workflow found in banking apps.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer      | Technology                             |
-| ---------- | -------------------------------------- |
-| Backend    | Node.js, Express.js                    |
-| Database   | MongoDB + Mongoose                     |
-| Auth & OTP | Custom Auth, JWT, OTP via Email        |
-| Testing    | Jest, Supertest, MongoDB Memory Server |
+| Layer     | Technology                                |
+| --------- | ----------------------------------------- |
+| Server    | Node.js, Express.js                       |
+| Database  | MongoDB + Mongoose                        |
+| Auth      | JWT                                       |
+| Testing   | Jest, Supertest, MongoDB Memory Server    |
+| Utilities | Cron Jobs, Email/OTP, Socket-based alerts |
 
 ---
 
-## 📦 Installation for backend
+📁 Project Structure
 
-1. Clone the repository:
+```bash
+AlphaPay-backend/
+│
+├─ backend/
+│   ├─ index.js
+│   ├─ package.json
+│   ├─ public
+│   │   └─ avatar/
+│   ├─ src
+│   │   ├─ app.js
+│   │   ├─ config/
+│   │   ├─ controllers/
+│   │   │   ├─ admin-controllers/
+│   │   │   └─ user-controllers/
+│   │   ├─ cron.js
+│   │   ├─ middleware/
+│   │   │   ├─ admin-middleware/
+│   │   │   ├─ user-middleware/
+│   │   │   └─ errorHandler.js
+│   │   ├─ models/
+│   │   │   ├─ admin-models/
+│   │   │   └─ user-models/
+│   │   ├─ routes/
+│   │   │   ├─ admin-routes/
+│   │   │   └─ user-routes/
+│   │   └─ util/
+│   └─ tests
+│       ├─ admin-tests/
+│       └─ user-tests/
+├─ .github/
+├─ .gitignore
+├─ LICENSE
+└─ README.md
+
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+1. Clone the project:
 
    ```bash
-   git clone https://github.com/punit-dev/AlphaPay.git
-   cd AlphaPay/backend
+   git clone https://github.com/punit-dev/AlphaPay-backend.git
+   cd AlphaPay-backend/backend
    ```
 
 2. Install dependencies:
@@ -95,9 +105,8 @@ AlphaPay is a secure and modern UPI-based payment system that includes a wide ra
 3. Set up environment variables:
 
    - Create a `.env` file in the root directory.
-   - Add the following variables:
 
-     ```
+     ```ini
      PORT=5000
      MONGO_URI=your_mongodb_uri
 
@@ -112,31 +121,52 @@ AlphaPay is a secure and modern UPI-based payment system that includes a wide ra
      NODE_ENV=development
      ```
 
-4. Start the development server:
+4. Run development server:
    ```bash
    npm run start
    ```
 5. Run tests:
+   (Jest + Supertest + MongoDB Memory Server)
    ```bash
    npm run test
    ```
 
 ---
 
-## 🗺️ Roadmap
+## 📬 API Documentation
 
-- [x] Backend Core Logic
-- [x] OTP Auth System with Testing
-- [x] Admin panel backend
-- [ ] QR Code Payment Support
-- [ ] Deployment (Backend + APK)
+All APIs (Users + Payments + Bills + Cards + Notifications + Admin + Stats) are documented clearly in Postman.
+
+### 🔗 Postman Collection
+
+```bash
+/docs/AlphaPay.postman_collection.json
+```
+
+> _You can test all routes using the Postman collection provided in the repo._
+
+---
+
+## 📊 Admin Dashboard Features
+
+- User management
+- Block/unblock users
+- Transaction monitoring
+- Refund operations
+- Deduct wallet balance
+- Detailed analytics:
+  - Total users
+  - Active users
+  - Total transactions
+  - Failed/success/refund stats
+  - Revenue & Avg transaction value
+  - Top users
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE)<br>
-© 2025 Punit Poddar
+[MIT License](LICENSE) © 2025 Punit Poddar
 
 ---
 

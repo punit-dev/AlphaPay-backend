@@ -111,7 +111,7 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-mongoose.set("toJSON", {
+UserSchema.set("toJSON", {
   transform: (doc, ret) => {
     delete ret.__v;
     delete ret.password;
