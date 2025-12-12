@@ -71,7 +71,7 @@ app.use((req, res, next) => {
 app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
 app.use(
-  "/api/users",
+  "/api/v1/users",
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -80,7 +80,7 @@ app.use(
   userRoute
 );
 app.use(
-  "/api/admin",
+  "/api/v1/admin",
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],

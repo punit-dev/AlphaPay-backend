@@ -10,9 +10,10 @@ exports.validateRegister = [
   body("email").isEmail().withMessage("Valid email is required"),
   body("phoneNumber")
     .isMobilePhone("any")
-    .withMessage("Valid phone number is required"),
+    .isLength({ min: 10 })
+    .withMessage("Valid phone number is required with at least 10 digits"),
   body("password")
-    .isLength({ min: 6 })
+    .isLength({ min: 8 })
     .withMessage("Password must be at least 6 characters"),
   body("dateOfBirth")
     .isISO8601()

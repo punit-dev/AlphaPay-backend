@@ -58,10 +58,7 @@ const register = asyncHandler(async (req, res) => {
 
   // Create auth token after registration
   const authToken = createToken({ userId: newUser._id });
-  res.cookie("token", authToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  });
+
   res.status(201).json({
     message: "User created successfully",
     user: newUser,

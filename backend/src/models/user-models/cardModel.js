@@ -12,8 +12,8 @@ const CardSchema = new mongoose.Schema({
     required: true,
   },
   CVV: {
-    type: String,
-    require: true,
+    type: Number,
+    required: true,
   },
   expiryDate: {
     type: String,

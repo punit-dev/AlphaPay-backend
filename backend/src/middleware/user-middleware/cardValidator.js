@@ -20,7 +20,7 @@ const registerCardValidator = [
     .withMessage("Expiry date must be in MM/YY format"),
 
   body("cardHolder")
-    .isLength({ min: 2 })
+    .isLength({ min: 5 })
     .withMessage("Card holder name is too short"),
 
   body("type")

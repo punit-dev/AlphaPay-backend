@@ -7,27 +7,23 @@
  * Logic:
  * 1. Get today's month and year.
  * 2. Parse expiry month and year from the given date string.
- * 3. Convert expiry year to full format (e.g., "25" -> 2025).
- * 4. If expiry year is less than current year → expired.
- * 5. If expiry year is the same but expiry month is < current month → expired.
- * 6. Otherwise → not expired.
+ * 3. If expiry year is less than equal to current year → expired.
+ * 4. If expiry year is the same but expiry month is <= current month → expired.
+ * 5. Otherwise → not expired.
  */
 const isDateCurrent = (date) => {
   const today = new Date();
 
   const todayMonth = today.getMonth() + 1;
-  const todayYear = today.getFullYear();
+  const todayYear = today.getFullYear() % 100;
 
   const [expiryMonth, expiryYear] = date.split("/").map(Number);
 
-  const givenYear = 2000 + expiryYear;
-  const givenMonth = expiryMonth;
-
-  if (givenYear < todayYear) {
+  if (expiryYear <= todayYear) {
     return true;
   }
 
-  if (givenYear === todayYear && givenMonth < todayMonth) return true;
+  if (expiryYear === todayYear && expiryMonth <= todayMonth) return true;
   return false;
 };
 
