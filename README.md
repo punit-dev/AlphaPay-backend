@@ -1,7 +1,7 @@
 # 💸 AlphaPay - Simplifying Digital Payment
 
 _A secure and modern digital payment backend built with Node.js, Express, MongoDB, and JWT._<br><br>
-AlphaPay is a full-featured backend system that simulates real-world digital payments (similar to UPI apps). It includes secure authentication, wallet management, transaction handling, bill payments, admin dashboard, and **payment receipt verification** to prevent fake transaction proofs.
+AlphaPay is a full-featured backend system that simulates real-world digital payments (similar to UPI apps). It includes secure authentication, wallet management, transaction handling, bill payments, admin dashboard.
 
 ---
 
