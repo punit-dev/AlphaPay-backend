@@ -27,12 +27,6 @@ AlphaPay is a full-featured backend system that simulates real-world digital pay
 - OTP expiration & one-time-use logic
 - Rate-safety around transactions
 
-### 🧾 Payment Receipt Verification (Special Feature)
-
-To prevent fraud, AlphaPay includes **transaction receipt verification.**<br>
-If a payer sends a fake screenshot as "proof of payment," the payee can verify the receipt's authenticity using the AlphaPay transaction ID.
-This simulates a real payment-checking workflow found in banking apps.
-
 ---
 
 ## 🛠️ Tech Stack
@@ -78,6 +72,8 @@ AlphaPay-backend/
 │   └─ tests
 │       ├─ admin-tests/
 │       └─ user-tests/
+├─ docs
+│   └─ alphaPay.postman_collection.json
 ├─ .github/
 ├─ .gitignore
 ├─ LICENSE
@@ -103,7 +99,6 @@ AlphaPay-backend/
    ```
 
 3. Set up environment variables:
-
    - Create a `.env` file in the root directory.
 
      ```ini
