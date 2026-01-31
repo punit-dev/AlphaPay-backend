@@ -163,14 +163,14 @@ const login = asyncHandler(async (req, res) => {
     throw isNotValid;
   }
 
-  const { data, password } = req.body;
+  const { email, password } = req.body;
 
   const isUser = await UserModel.findOne({
-    $or: [{ email: data }, { username: data }],
+    $or: [{ email: email }],
   });
   if (!isUser) {
     res.status(401);
-    throw new Error("Incorrect username and password");
+    throw new Error("Incorrect email and password");
   }
 
   if (isUser.isBlocked) {
@@ -187,7 +187,7 @@ const login = asyncHandler(async (req, res) => {
   const isMatched = await comparePass(isUser.password, password);
   if (!isMatched) {
     res.status(401);
-    throw new Error("Incorrect username and password");
+    throw new Error("Incorrect email and password");
   }
 
   // Create and send auth token
