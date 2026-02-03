@@ -82,14 +82,20 @@ app.use(
 app.use(
   "/api/v1/admin",
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
   adminRoute
 );
 
-app.get("/health", (req, res) => {
+app.get(
+  "/health", 
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+    methods: ["GET"],
+  }), (req, res) => {
   res.status(200).json({ status: "OK", message: "Server is healthy" });
 });
 
