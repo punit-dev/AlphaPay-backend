@@ -21,10 +21,10 @@ exports.validateRegister = [
 ];
 
 exports.validateLogin = [
-  body("data")
+  body("email")
     .notEmpty()
-    .isString()
-    .withMessage("Email or username is required"),
+    .isEmail()
+    .withMessage("Email is required"),
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
