@@ -429,8 +429,8 @@ const getTransaction = asyncHandler(async (req, res) => {
     $or: [{ "payee.userRef": user._id }, { "payer.userRef": user._id }],
   })
     .sort({ createdAt: -1 })
-    .populate("payee.userRef", "username upiId")
-    .populate("payer.userRef", "username upiId");
+    .populate("payee.userRef", "username upiId profilePic")
+    .populate("payer.userRef", "username upiId profilePic");
 
   if (!allTran) {
     res.status(404);
