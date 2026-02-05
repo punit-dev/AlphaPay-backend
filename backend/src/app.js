@@ -68,6 +68,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.options("*", cors());
+
 app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
 app.use(
