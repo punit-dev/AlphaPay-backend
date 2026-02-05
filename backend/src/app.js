@@ -21,7 +21,7 @@ app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
-  })
+  }),
 );
 
 app.use(
@@ -29,13 +29,19 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
+        connectSrc: [
+          "'self'",
+          "http://localhost:5173",
+          "http://localhost:5174",
+          "https://alphapay.onrender.com",
+        ],
         scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
         styleSrc: ["'self'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:"],
       },
     },
-  })
+  }),
 );
 
 app.use((req, res, next) => {
@@ -68,36 +74,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+);
 app.options("*", cors());
 
 app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
-app.use(
-  "/api/v1/users",
-  cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  }),
-  userRoute
-);
-app.use(
-  "/api/v1/admin",
-  cors({
-    origin: "http://localhost:5174",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  }),
-  adminRoute
-);
+app.use("/api/v1/users", userRoute);
+app.use("/api/v1/admin", adminRoute);
 
-app.get(
-  "/health", 
-  cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true,
-    methods: ["GET"],
-  }), (req, res) => {
+app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK", message: "Server is healthy" });
 });
 
