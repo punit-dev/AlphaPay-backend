@@ -81,7 +81,6 @@ app.use(
     credentials: true,
   }),
 );
-app.options("*", cors());
 
 app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
