@@ -425,21 +425,33 @@ const verifyTransaction = asyncHandler(async (req, res) => {
  */
 const getTransaction = asyncHandler(async (req, res) => {
   const user = req.user;
+  const isNotValid = checkValidation(req.query);
+
+  if (isNotValid) {
+    res.status(400);
+    throw isNotValid;
+  }
+
+  const { limit } = req.query;
+
   const allTran = await TransactionModel.find({
     $or: [{ "payee.userRef": user._id }, { "payer.userRef": user._id }],
   })
     .sort({ createdAt: -1 })
     .populate("payee.userRef", "username upiId profilePic fullname")
-    .populate("payer.userRef", "username upiId profilePic fullname");
+    .populate("payer.userRef", "username upiId profilePic fullname")
+    .limit(limit ? parseInt(limit) : 10);
 
   if (!allTran) {
     res.status(404);
     throw new Error("Transaction not found");
   }
 
-  return res
-    .status(200)
-    .json({ message: "Transaction History", allTransactions: allTran });
+  return res.status(200).json({
+    message: "Transaction History",
+    allTransactions: allTran,
+    currentBalance: user.walletBalance,
+  });
 });
 
 module.exports = {

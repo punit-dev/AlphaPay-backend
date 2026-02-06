@@ -10,19 +10,19 @@ route.use(authMiddleware);
 route.post(
   "/user-to-user",
   tranValidator.userToUserValidator,
-  TranController.userToUserTransaction
+  TranController.userToUserTransaction,
 );
 route.post(
   "/user-to-bill",
   tranValidator.userToBillValidator,
-  TranController.userToBillTransaction
+  TranController.userToBillTransaction,
 );
 route.post(
   "/wallet-recharge",
   tranValidator.walletRechargeValidator,
-  TranController.walletRecharge
+  TranController.walletRecharge,
 );
 route.get("/verify-transaction", TranController.verifyTransaction);
-route.get("/", TranController.getTransaction);
+route.get("/", tranValidator.checkLimit, TranController.getTransaction);
 
 module.exports = route;

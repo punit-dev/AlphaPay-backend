@@ -33,9 +33,17 @@ const walletRechargeValidator = [
   body("upiPin").notEmpty().withMessage("UPI pin is required"),
 ];
 
+const checkLimit = [
+  query("limit")
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage("Limit must be a number greater than 0"),
+];
+
 module.exports = {
   userToUserValidator,
   userToBillValidator,
   verifyValidator,
   walletRechargeValidator,
+  checkLimit,
 };
