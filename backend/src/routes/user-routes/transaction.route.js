@@ -22,7 +22,11 @@ route.post(
   tranValidator.walletRechargeValidator,
   TranController.walletRecharge,
 );
-route.get("/verify-transaction", TranController.verifyTransaction);
+route.get(
+  "/get-transaction-by-id",
+  tranValidator.getTransactionByIdValidator,
+  TranController.getTransactionById,
+);
 route.get("/", tranValidator.checkLimit, TranController.getTransaction);
 
 module.exports = route;

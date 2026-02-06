@@ -1063,7 +1063,7 @@
               ]
             },
             {
-              "name": "Verify Transaction",
+              "name": "Get Transaction By Id",
               "tag": ["Transactions"],
               "request": {
                 "method": "GET",
@@ -1074,7 +1074,7 @@
                   }
                 ],
                 "url": {
-                  "raw": "http://localhost:3000/api/v1/users/transactions/verify-transaction?query=transaction_id",
+                  "raw": "http://localhost:3000/api/v1/users/transactions/get-transaction-by-id?query=transaction_id",
                   "protocol": "http",
                   "host": ["localhost"],
                   "port": "3000",
@@ -1082,13 +1082,13 @@
                     "api",
                     "users",
                     "transactions",
-                    "verify-transaction"
+                    "get-transaction-by-id"
                   ],
                   "query": [
                     {
                       "key": "query",
                       "value": "transaction_id",
-                      "description": "Transaction ID to verify"
+                      "description": "Transaction ID to get transaction"
                     }
                   ]
                 },
@@ -1096,16 +1096,16 @@
               },
               "response": [
                 {
-                  "name": "✅ 200 - Transaction Verified",
+                  "name": "✅ 200 - Transaction",
                   "status": "OK",
                   "code": 200,
-                  "body": "{\n  \"message\": \"This transaction is verified.\",\n  \"transaction\": {\n    \"_id\": \"507f1f77bcf86cd799439015\",\n    \"initiatedBy\": \"USER\",\n    \"payer\": {\n    \"userRef\": \"507f1f77bcf86cd799439011\",\n    \"transactionType\": \"DEBIT\"\n    },\n    \"payee\": {\n    \"userRef\": \"507f1f77bcf86cd799439012\",\n    \"type\": \"user\",\n    \"transactionType\": \"CREDIT\"\n    },\n    \"category\": \"TRANSFER\",\n    \"amount\": 500,\n    \"method\": { \"type\": \"wallet\", \"cardRef\": null },\n    \"status\": \"SUCCESS\",\n    \"message\": \"Paid\",\n    \"createdAt\": \"2025-12-11T10:30:00Z\",\n    \"updatedAt\": \"2025-12-11T10:30:00Z\"\n  }\n}"
+                  "body": "{\n  \"message\": \"Transaction\",\n  \"transaction\": {\n    \"_id\": \"507f1f77bcf86cd799439015\",\n    \"initiatedBy\": \"USER\",\n    \"payer\": {\n    \"userRef\": \"507f1f77bcf86cd799439011\",\n    \"transactionType\": \"DEBIT\"\n    },\n    \"payee\": {\n    \"userRef\": \"507f1f77bcf86cd799439012\",\n    \"type\": \"user\",\n    \"transactionType\": \"CREDIT\"\n    },\n    \"category\": \"TRANSFER\",\n    \"amount\": 500,\n    \"method\": { \"type\": \"wallet\", \"cardRef\": null },\n    \"status\": \"SUCCESS\",\n    \"message\": \"Paid\",\n    \"createdAt\": \"2025-12-11T10:30:00Z\",\n    \"updatedAt\": \"2025-12-11T10:30:00Z\"\n  }\n}"
                 },
                 {
                   "name": "❌ 404 - Transaction Not Found",
                   "status": "Not Found",
                   "code": 404,
-                  "body": "{\n  \"message\": \"This transaction is not valid.\"\n}"
+                  "body": "{\n  \"message\": \"Not found\"\n}"
                 },
                 {
                   "name": "❌ 400 - Invalid Query",

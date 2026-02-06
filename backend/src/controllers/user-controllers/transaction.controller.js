@@ -393,11 +393,11 @@ const walletRecharge = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   GET /api/clients/transactions/verify-transaction?query=transactionId
- * @desc    Verify a transaction by ID
+ * @route   GET /api/clients/transactions/get-transaction-by-id?query=transactionId
+ * @desc    Get transaction details by ID
  * @access  Private
  */
-const verifyTransaction = asyncHandler(async (req, res) => {
+const getTransactionById = asyncHandler(async (req, res) => {
   const isNotValid = checkValidation(req);
 
   if (isNotValid) {
@@ -407,15 +407,15 @@ const verifyTransaction = asyncHandler(async (req, res) => {
 
   const { query } = req.query;
 
-  const transaction = await TransactionModel.findById(query);
+  const transaction = await TransactionModel.findById(query)
+    .populate("payee.userRef", "username upiId profilePic fullname")
+    .populate("payer.userRef", "username upiId profilePic fullname");
   if (!transaction) {
     res.status(404);
-    throw new Error("This transaction is not valid.");
+    throw new Error("Not found");
   }
 
-  return res
-    .status(200)
-    .json({ message: "This transaction is verified.", transaction });
+  return res.status(200).json({ message: "Transaction", transaction });
 });
 
 /**
@@ -458,6 +458,6 @@ module.exports = {
   userToUserTransaction,
   userToBillTransaction,
   walletRecharge,
-  verifyTransaction,
+  getTransactionById,
   getTransaction,
 };

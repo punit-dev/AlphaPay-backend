@@ -21,7 +21,7 @@ const userToBillValidator = [
     .withMessage("Validity must be a number greater than 0"),
 ];
 
-const verifyValidator = [
+const getTransactionByIdValidator = [
   query("query").notEmpty().withMessage("Query is required"),
 ];
 
@@ -43,7 +43,7 @@ const checkLimit = [
 module.exports = {
   userToUserValidator,
   userToBillValidator,
-  verifyValidator,
+  getTransactionByIdValidator,
   walletRechargeValidator,
   checkLimit,
 };
