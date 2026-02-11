@@ -32,6 +32,7 @@ app.use(
         connectSrc: [
           "'self'",
           "http://localhost:5173",
+          "https://alphapay-zeta.vercel.app",
           "http://localhost:5174",
           "https://alphapay.onrender.com",
         ],
@@ -76,7 +77,7 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: ["http://localhost:5173", "http://localhost:5174","https://alphapay-zeta.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   }),
