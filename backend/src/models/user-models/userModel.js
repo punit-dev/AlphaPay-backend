@@ -3,16 +3,16 @@ const { hashPass } = require("../../util/hash");
 const encrypt = require("mongoose-encryption");
 
 const avatars = [
-  "http://alphapay.onrender.com/assets/avatar/male1.png",
-  "http://alphapay.onrender.com/assets/avatar/female1.png",
-  "http://alphapay.onrender.com/assets/avatar/male2.png",
-  "http://alphapay.onrender.com/assets/avatar/female2.png",
-  "http://alphapay.onrender.com/assets/avatar/male3.png",
-  "http://alphapay.onrender.com/assets/avatar/female3.png",
-  "http://alphapay.onrender.com/assets/avatar/male4.png",
-  "http://alphapay.onrender.com/assets/avatar/female4.png",
-  "http://alphapay.onrender.com/assets/avatar/male5.png",
-  "http://alphapay.onrender.com/assets/avatar/female5.png",
+  "https://alphapay.onrender.com/assets/avatar/male1.png",
+  "https://alphapay.onrender.com/assets/avatar/female1.png",
+  "https://alphapay.onrender.com/assets/avatar/male2.png",
+  "https://alphapay.onrender.com/assets/avatar/female2.png",
+  "https://alphapay.onrender.com/assets/avatar/male3.png",
+  "https://alphapay.onrender.com/assets/avatar/female3.png",
+  "https://alphapay.onrender.com/assets/avatar/male4.png",
+  "https://alphapay.onrender.com/assets/avatar/female4.png",
+  "https://alphapay.onrender.com/assets/avatar/male5.png",
+  "https://alphapay.onrender.com/assets/avatar/female5.png",
 ];
 
 const UserSchema = new mongoose.Schema(
