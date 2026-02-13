@@ -8,6 +8,7 @@ const initializeSocket = (server) => {
     cors: {
       origin: ["http://localhost:5173","https://alphapay-three.vercel.app"],
       methods: ["GET", "POST"],
+      credentials: true,
     },
   });
 
