@@ -6,7 +6,7 @@ let io;
 const initializeSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "*",
+      origin: ["http://localhost:5173","https://alphapay-three.vercel.app"],
       methods: ["GET", "POST"],
     },
   });
