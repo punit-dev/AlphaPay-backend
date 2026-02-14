@@ -7,6 +7,7 @@ const tranRoute = require("./transaction.route");
 const billRoute = require("./bill.route");
 const cardRoute = require("./card.route");
 const notificationRoute = require("./notification.route");
+const requestRoute = require("./request.route");
 
 route.use("/auth", authRoute);
 route.use("/", userRoute);
@@ -14,5 +15,6 @@ route.use("/transactions", tranRoute);
 route.use("/bills", billRoute);
 route.use("/cards", cardRoute);
 route.use("/notifications", notificationRoute);
+route.use("/requests", requestRoute);
 
 module.exports = route;

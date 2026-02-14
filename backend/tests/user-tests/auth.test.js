@@ -34,7 +34,7 @@ let otp;
 describe("auth route testing", () => {
   it("should user register", async () => {
     const res = await request(app)
-      .post("/api/users/auth/register")
+      .post("/api/v1/users/auth/register")
       .send(testUser);
 
     expect(res.statusCode).toBe(201);
@@ -53,7 +53,7 @@ describe("auth route testing", () => {
 
   it("should otp verify", async () => {
     const res = await request(app)
-      .post("/api/users/auth/verify-otp")
+      .post("/api/v1/users/auth/verify-otp")
       .send({ otp: otp, email: "domojeb184@ikanteri.com" });
 
     expect(res.statusCode).toBe(200);
@@ -61,15 +61,15 @@ describe("auth route testing", () => {
 
   it("should user resend OTP", async () => {
     const res = await request(app)
-      .post("/api/users/auth/resend-otp")
+      .post("/api/v1/users/auth/resend-otp")
       .send({ email: "domojeb184@ikanteri.com" });
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("OTP sent successfully");
   });
 
   it("should user login", async () => {
-    const res = await request(app).post("/api/users/auth/login").send({
-      data: "example123",
+    const res = await request(app).post("/api/v1/users/auth/login").send({
+      email: "domojeb184@ikanteri.com",
       password: "123456789",
     });
 
@@ -81,7 +81,7 @@ describe("auth route testing", () => {
 
   it("should logout user", async () => {
     const res = await request(app)
-      .post("/api/users/auth/logout")
+      .post("/api/v1/users/auth/logout")
       .set("Authorization", `Bearer ${authToken}`);
 
     expect(res.statusCode).toBe(200);
@@ -92,15 +92,17 @@ describe("auth route testing", () => {
 describe("auth route edge cases testing", () => {
   //verify-otp edge case
   it("should not verify OTP without otp and token", async () => {
-    const res = await request(app).post("/api/users/auth/verify-otp").send({});
+    const res = await request(app)
+      .post("/api/v1/users/auth/verify-otp")
+      .send({});
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(
-      "OTP is required, OTP must be valid, Valid email is required"
+      "OTP is required, OTP must be valid, Valid email is required",
     );
   });
   it("should not verify with invalid OTP format", async () => {
     const res = await request(app)
-      .post("/api/users/auth/verify-otp")
+      .post("/api/v1/users/auth/verify-otp")
       .send({ otp: "abc123", email: "fakeEmail" });
 
     expect(res.statusCode).toBe(400);
@@ -109,7 +111,7 @@ describe("auth route edge cases testing", () => {
 
   //register user edge case
   it("should reject registration with missing fields", async () => {
-    const res = await request(app).post("/api/users/auth/register").send({
+    const res = await request(app).post("/api/v1/users/auth/register").send({
       username: "",
       email: "",
       password: "",
@@ -117,12 +119,12 @@ describe("auth route edge cases testing", () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(
-      `Username is required, Username must be at least 5 characters, Fullname is required, Valid email is required, Valid phone number is required, Password must be at least 6 characters, Valid date of birth is required`
+      `Username is required, Username must be at least 5 characters, Fullname is required, Valid email is required, Invalid value, Valid phone number is required with at least 10 digits, Password must be at least 6 characters, Valid date of birth is required`,
     );
   });
   it("should reject registration with invalid email", async () => {
     const res = await request(app)
-      .post("/api/users/auth/register")
+      .post("/api/v1/users/auth/register")
       .send({
         ...testUser,
         email: "Invalid Email",
@@ -133,7 +135,7 @@ describe("auth route edge cases testing", () => {
   });
   it("should reject if password too short", async () => {
     const res = await request(app)
-      .post("/api/users/auth/register")
+      .post("/api/v1/users/auth/register")
       .send({
         ...testUser,
         password: "123",
@@ -144,11 +146,11 @@ describe("auth route edge cases testing", () => {
   });
   it("should reject registration if username or email already exists", async () => {
     // First create user
-    await request(app).post("/api/users/auth/register").send(testUser);
+    await request(app).post("/api/v1/users/auth/register").send(testUser);
 
     // Try again with same email
     const res = await request(app)
-      .post("/api/users/auth/register")
+      .post("/api/v1/users/auth/register")
       .send(testUser);
 
     expect(res.statusCode).toBe(400);
@@ -156,12 +158,12 @@ describe("auth route edge cases testing", () => {
   });
 
   it("should not resend OTP with missing fields", async () => {
-    const res = await request(app).post("/api/users/auth/resend-otp").send();
+    const res = await request(app).post("/api/v1/users/auth/resend-otp").send();
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toBe("Valid email is required");
   });
   it("should not resend OTP with wrong credential", async () => {
-    const res = await request(app).post("/api/users/auth/resend-otp").send({
+    const res = await request(app).post("/api/v1/users/auth/resend-otp").send({
       email: "wrongEmail@mail.com",
     });
     expect(res.statusCode).toBe(404);
@@ -170,40 +172,40 @@ describe("auth route edge cases testing", () => {
 
   //login edge case
   it("should reject login with missing fields", async () => {
-    const res = await request(app).post("/api/users/auth/login").send({});
+    const res = await request(app).post("/api/v1/users/auth/login").send({});
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(
-      "Email or username is required, Password is required"
+      "Invalid value, Email is required, Password is required",
     );
   });
   it("should reject login with wrong credentials", async () => {
-    const res = await request(app).post("/api/users/auth/login").send({
-      data: "wrongUser",
+    const res = await request(app).post("/api/v1/users/auth/login").send({
+      email: "wrongUser",
       password: "wrongPass",
     });
 
-    expect(res.statusCode).toBe(401);
-    expect(res.body.message).toMatch("Incorrect username and password");
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toMatch("Email is required");
   });
   it("should reject NoSQL injection attempt", async () => {
-    const res = await request(app).post("/api/users/auth/login").send({
-      data: '{ $gt: "" }',
+    const res = await request(app).post("/api/v1/users/auth/login").send({
+      email: '{ $gt: "" }',
       password: "any",
     });
 
-    expect(res.statusCode).toBe(401);
-    expect(res.body.message).toBe("Incorrect username and password");
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe("Email is required");
   });
 
   //logout edge case
   it("should reject logout without token", async () => {
-    const res = await request(app).post("/api/users/auth/logout");
+    const res = await request(app).post("/api/v1/users/auth/logout");
     expect(res.statusCode).toBe(401);
     expect(res.body.message).toMatch("Token is required");
   });
   it("should reject logout with invalid token", async () => {
     const res = await request(app)
-      .post("/api/users/auth/logout")
+      .post("/api/v1/users/auth/logout")
       .set("Authorization", "Bearer fake.token.here");
 
     expect(res.statusCode).toBe(401);

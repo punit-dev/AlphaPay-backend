@@ -19,7 +19,7 @@ const isDateCurrent = (date) => {
 
   const [expiryMonth, expiryYear] = date.split("/").map(Number);
 
-  if (expiryYear <= todayYear) {
+  if (expiryYear < todayYear) {
     return true;
   }
 

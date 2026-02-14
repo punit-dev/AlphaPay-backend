@@ -81,7 +81,7 @@ const TransactionSchema = new mongoose.Schema(
       trim: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 TransactionSchema.set("toJSON", {

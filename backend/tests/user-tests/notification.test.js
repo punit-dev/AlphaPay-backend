@@ -27,13 +27,13 @@ beforeAll(async () => {
 beforeEach(async () => {
   await UserModel.deleteMany();
   await UserModel.create(testUser);
-  const res = await request(app).post("/api/users/auth/login").send({
-    data: "example123",
+  const res = await request(app).post("/api/v1/users/auth/login").send({
+    email: "domojeb184@ikanteri.com",
     password: "123456789",
   });
   authToken = res.body.token;
   await request(app)
-    .put("/api/users/update-pin")
+    .put("/api/v1/users/update-pin")
     .send({ newPin: "123456" })
     .set({ authorization: `Bearer ${authToken}` });
 });
@@ -54,7 +54,7 @@ describe("notification route testing", () => {
       type: "transaction",
     });
     const res = await request(app)
-      .get("/api/users/notifications/get-notifications")
+      .get("/api/v1/users/notifications")
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(200);
@@ -72,7 +72,7 @@ describe("notification route testing", () => {
 
     const res = await request(app)
       .put(
-        `/api/users/notifications/mark-as-read?notificationId=${notification._id}`
+        `/api/v1/users/notifications/mark-as-read?notificationId=${notification._id}`,
       )
       .set({ authorization: `Bearer ${authToken}` });
 
@@ -91,7 +91,7 @@ describe("notification route testing", () => {
 
     const res = await request(app)
       .delete(
-        `/api/users/notifications/delete-notification?notificationId=${notification._id}`
+        `/api/v1/users/notifications/delete-notification?notificationId=${notification._id}`,
       )
       .set({ authorization: `Bearer ${authToken}` });
     expect(res.statusCode).toBe(200);
@@ -102,7 +102,7 @@ describe("notification route testing", () => {
 describe("notification route edge case testing", () => {
   it("should return empty array if no notifications exist", async () => {
     const res = await request(app)
-      .get("/api/users/notifications/get-notifications")
+      .get("/api/v1/users/notifications")
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(200);
@@ -110,9 +110,7 @@ describe("notification route edge case testing", () => {
   });
 
   it("should fail if no auth token is provided for fetching notifications", async () => {
-    const res = await request(app).get(
-      "/api/users/notifications/get-notifications"
-    );
+    const res = await request(app).get("/api/v1/users/notifications");
 
     expect(res.statusCode).toBe(401);
     expect(res.body.message).toMatch(/unauthorized|token/i);
@@ -121,7 +119,7 @@ describe("notification route edge case testing", () => {
   it("should return 404 if notificationId does not exist (mark as read)", async () => {
     const fakeId = "507f1f77bcf86cd799439011"; // valid ObjectId but not in DB
     const res = await request(app)
-      .put(`/api/users/notifications/mark-as-read?notificationId=${fakeId}`)
+      .put(`/api/v1/users/notifications/mark-as-read?notificationId=${fakeId}`)
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(404);
@@ -130,7 +128,7 @@ describe("notification route edge case testing", () => {
 
   it("should return 400 if notificationId is invalid (mark as read)", async () => {
     const res = await request(app)
-      .put("/api/users/notifications/mark-as-read?notificationId=invalidID")
+      .put("/api/v1/users/notifications/mark-as-read?notificationId=invalidID")
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(400);
@@ -141,7 +139,7 @@ describe("notification route edge case testing", () => {
     const fakeId = "507f1f77bcf86cd799439012";
     const res = await request(app)
       .delete(
-        `/api/users/notifications/delete-notification?notificationId=${fakeId}`
+        `/api/v1/users/notifications/delete-notification?notificationId=${fakeId}`,
       )
       .set({ authorization: `Bearer ${authToken}` });
 
@@ -152,7 +150,7 @@ describe("notification route edge case testing", () => {
   it("should return 400 if notificationId is invalid on delete", async () => {
     const res = await request(app)
       .delete(
-        "/api/users/notifications/delete-notification?notificationId=wrongID"
+        "/api/v1/users/notifications/delete-notification?notificationId=wrongID",
       )
       .set({ authorization: `Bearer ${authToken}` });
 

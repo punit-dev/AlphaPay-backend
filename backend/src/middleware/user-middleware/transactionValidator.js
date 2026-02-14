@@ -7,6 +7,7 @@ const userToUserValidator = [
     .withMessage("Amount must be a number greater than 0"),
   body("method").isIn(["wallet", "card"]).withMessage("Invalid method"),
   body("pin").notEmpty().withMessage("UPI pin is required"),
+  body("message").optional().isString().withMessage("message must be valid."),
 ];
 
 const userToBillValidator = [

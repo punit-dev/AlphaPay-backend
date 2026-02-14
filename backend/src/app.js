@@ -17,12 +17,15 @@ const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
 
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-  }),
-);
+// Skip rate limiting in test environment
+if (process.env.NODE_ENV !== "test") {
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+    }),
+  );
+}
 
 app.use(
   helmet({
@@ -77,7 +80,11 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174","https://alphapay-three.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://alphapay-three.vercel.app",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   }),

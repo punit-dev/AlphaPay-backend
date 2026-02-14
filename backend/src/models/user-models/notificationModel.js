@@ -10,7 +10,7 @@ const NotificationSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: ["transaction", "bill", "card", "alert"],
+      enum: ["transaction", "bill", "card", "alert", "request"],
     },
     action: {
       type: String,
@@ -28,7 +28,7 @@ const NotificationSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 NotificationSchema.set("toJSON", {

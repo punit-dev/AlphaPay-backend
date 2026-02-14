@@ -29,13 +29,13 @@ beforeAll(async () => {
 beforeEach(async () => {
   await UserModel.deleteMany();
   await UserModel.create(testUser);
-  const res = await request(app).post("/api/users/auth/login").send({
-    data: "example123",
+  const res = await request(app).post("/api/v1/users/auth/login").send({
+    email: "domojeb184@ikanteri.com",
     password: "123456789",
   });
   authToken = res.body.token;
   await request(app)
-    .put("/api/users/update-pin")
+    .put("/api/v1/users/update-pin")
     .send({ newPin: "123456" })
     .set({ authorization: `Bearer ${authToken}` });
 });
@@ -61,7 +61,7 @@ describe("transaction route testing", () => {
     });
 
     const res = await request(app)
-      .post("/api/users/transactions/user-to-user")
+      .post("/api/v1/users/transactions/user-to-user")
       .send({
         payee: "example456@alphapay",
         amount: 100,
@@ -86,12 +86,12 @@ describe("transaction route testing", () => {
       provider: "Test Provider",
       UIdType: "email",
       UId: "testbill@provider",
-      category: "GooglePayTopUp",
+      category: "GooglePay Top-up",
       nickname: "My Google Pay",
     });
 
     const res = await request(app)
-      .post("/api/users/transactions/user-to-bill")
+      .post("/api/v1/users/transactions/user-to-bill")
       .send({
         id: "testbill@provider",
         method: "wallet",
@@ -121,7 +121,7 @@ describe("transaction route testing", () => {
     });
 
     const res = await request(app)
-      .post("/api/users/transactions/wallet-recharge")
+      .post("/api/v1/users/transactions/wallet-recharge")
       .send({
         cardID: card._id,
         amount: 500,
@@ -136,7 +136,7 @@ describe("transaction route testing", () => {
     expect(initiatedBy).toBe("USER");
     expect(method.type).toBe("card");
   });
-  it("should perform to verify transactions", async () => {
+  it("should fetch transaction by Id", async () => {
     const transaction = await TransactionModel.create({
       initiatedBy: "USER",
       amount: 500,
@@ -152,7 +152,7 @@ describe("transaction route testing", () => {
 
     const res = await request(app)
       .get(
-        `/api/users/transactions/verify-transaction?query=${transaction._id}`
+        `/api/v1/users/transactions/get-transaction-by-id?query=${transaction._id}`,
       )
       .set({ authorization: `Bearer ${authToken}` });
 
@@ -176,7 +176,7 @@ describe("transaction route testing", () => {
       payee: { name: "Example Test", accountOrPhone: "example123@alphapay" },
     });
     const res = await request(app)
-      .get("/api/users/transactions/all-transaction")
+      .get("/api/v1/users/transactions")
       .set({ authorization: `Bearer ${authToken}` });
     expect(res.statusCode).toBe(200);
     expect(res.body.allTransactions[0].amount).toBe(500);
@@ -188,7 +188,7 @@ describe("transaction route testing", () => {
 describe("transaction route edge cases", () => {
   it("should fail user-to-user transaction with invalid payee", async () => {
     const res = await request(app)
-      .post("/api/users/transactions/user-to-user")
+      .post("/api/v1/users/transactions/user-to-user")
       .send({
         payee: "nonexistent@alphapay",
         amount: 100,
@@ -196,6 +196,7 @@ describe("transaction route edge cases", () => {
         method: "wallet",
       })
       .set({ authorization: `Bearer ${authToken}` });
+    console.log("Transaction:  ", res.statusCode);
 
     expect(res.statusCode).toBe(404);
     expect(res.body.message).toMatch(/Payee not found/i);
@@ -214,7 +215,7 @@ describe("transaction route edge cases", () => {
     });
 
     const res = await request(app)
-      .post("/api/users/transactions/user-to-user")
+      .post("/api/v1/users/transactions/user-to-user")
       .send({
         payee: "lowbalance@alphapay",
         amount: 2000,
@@ -229,7 +230,7 @@ describe("transaction route edge cases", () => {
 
   it("should fail user-to-bill transaction with invalid bill ID", async () => {
     const res = await request(app)
-      .post("/api/users/transactions/user-to-bill")
+      .post("/api/v1/users/transactions/user-to-bill")
       .send({
         id: "wrong@provider",
         method: "wallet",
@@ -245,7 +246,7 @@ describe("transaction route edge cases", () => {
 
   it("should fail wallet recharge with invalid card", async () => {
     const res = await request(app)
-      .post("/api/users/transactions/wallet-recharge")
+      .post("/api/v1/users/transactions/wallet-recharge")
       .send({
         cardID: "6123456789abcdef01234567", // random ObjectId
         amount: 500,
@@ -260,19 +261,19 @@ describe("transaction route edge cases", () => {
   it("should fail verify transaction with invalid ID", async () => {
     const res = await request(app)
       .get(
-        `/api/users/transactions/verify-transaction?query=6123456789abcdef01234567`
+        `/api/v1/users/transactions/get-transaction-by-id?query=6123456789abcdef01234567`,
       )
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(404);
-    expect(res.body.message).toMatch(/This transaction is not valid./i);
+    expect(res.body.message).toMatch(/Not found/i);
   });
 
   it("should return empty transaction history when no transactions exist", async () => {
     // clean up first
     await TransactionModel.deleteMany({});
     const res = await request(app)
-      .get("/api/users/transactions/all-transaction")
+      .get("/api/v1/users/transactions")
       .set({ authorization: `Bearer ${authToken}` });
 
     expect(res.statusCode).toBe(200);
