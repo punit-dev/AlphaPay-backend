@@ -419,7 +419,7 @@ const getTransactionById = asyncHandler(async (req, res) => {
 });
 
 /**
- * @route   GET /api/clients/transactions/all-transaction
+ * @route   GET /api/clients/transactions
  * @desc    Get all transactions of the logged-in user
  * @access  Private
  */
@@ -433,6 +433,30 @@ const getTransaction = asyncHandler(async (req, res) => {
   }
 
   const { limit } = req.query;
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todayExpense = await TransactionModel.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: startOfDay, $lte: endOfDay },
+        "payer.userRef": user._id,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalAmount: { $sum: "$amount" },
+      },
+    },
+  ]);
+
+  const confirmTotal =
+    todayExpense.length > 0 ? todayExpense[0].totalAmount : 0;
 
   const allTran = await TransactionModel.find({
     $or: [{ "payee.userRef": user._id }, { "payer.userRef": user._id }],
@@ -451,6 +475,7 @@ const getTransaction = asyncHandler(async (req, res) => {
     message: "Transaction History",
     allTransactions: allTran,
     currentBalance: user.walletBalance,
+    expenses: confirmTotal,
   });
 });
 
