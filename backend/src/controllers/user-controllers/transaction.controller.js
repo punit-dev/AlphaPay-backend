@@ -445,6 +445,7 @@ const getTransaction = asyncHandler(async (req, res) => {
       $match: {
         createdAt: { $gte: startOfDay, $lte: endOfDay },
         "payer.userRef": user._id,
+        status: "SUCCESS",
       },
     },
     {
