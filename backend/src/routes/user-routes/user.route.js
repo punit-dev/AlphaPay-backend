@@ -4,43 +4,45 @@ const route = express.Router();
 const authMiddleware = require("../../middleware/user-middleware/authMiddleware");
 const UserController = require("../../controllers/user-controllers/user.controller");
 const userValidator = require("../../middleware/user-middleware/userValidator");
+const { searchLimiter } = require("../../middleware/user-middleware/rateLimit");
 
 route.get("/profile", authMiddleware, UserController.userProfile);
 route.put(
   "/update",
   userValidator.validateUpdateUser,
   authMiddleware,
-  UserController.updateUser
+  UserController.updateUser,
 );
 route.put(
   "/update-profile-pic",
   userValidator.validateUpdateProfilePic,
   authMiddleware,
-  UserController.updateProfilePic
+  UserController.updateProfilePic,
 );
 route.get(
   "/avatar-options",
   authMiddleware,
-  UserController.shareProfileAvatarOptions
+  UserController.shareProfileAvatarOptions,
 );
 route.put(
   "/update-pass",
   userValidator.validateUpdatePass,
   authMiddleware,
-  UserController.updatePass
+  UserController.updatePass,
 );
 route.put(
   "/update-pin",
   userValidator.validateUpdatePin,
   authMiddleware,
-  UserController.updateUpiPin
+  UserController.updateUpiPin,
 );
 route.delete("/delete", authMiddleware, UserController.deleteUser);
 route.get(
   "/search",
+  searchLimiter,
   userValidator.validateSearchQuery,
   authMiddleware,
-  UserController.search
+  UserController.search,
 );
 
 module.exports = route;

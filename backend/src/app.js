@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+app.set("trust proxy", 1);
+
 const path = require("path");
 
 const cookieParser = require("cookie-parser");
@@ -10,22 +12,12 @@ const userRoute = require("./routes/user-routes/index");
 const adminRoute = require("./routes/admin-routes/index");
 
 // Security middlewares
-const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
-
-// Skip rate limiting in test environment
-if (process.env.NODE_ENV !== "test") {
-  app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 100,
-    }),
-  );
-}
+const { generalLimiter } = require("./middleware/user-middleware/rateLimit");
 
 app.use(
   helmet({
@@ -92,7 +84,7 @@ app.use(
 
 app.use("/assets", express.static(path.join(process.cwd(), "public")));
 
-app.use("/api/v1/users", userRoute);
+app.use("/api/v1/users", generalLimiter, userRoute);
 app.use("/api/v1/admin", adminRoute);
 
 app.get("/health", (req, res) => {
