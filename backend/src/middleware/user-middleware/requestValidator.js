@@ -15,11 +15,7 @@ const makeRequestValidator = [
 
 const getRequestValidator = [
   query("len").isInt({ gt: 0 }).withMessage("len must be greater than 0"),
-  query("reqId").custom((value) => {
-    if (value === "") return Promise.resolve();
-    if (!value) throw new Error("reqId is required.");
-    return Promise.resolve();
-  }),
+  query("reqId").optional().isMongoId().withMessage("reqId is must be valid."),
 ];
 
 const acceptRequestValidator = [
