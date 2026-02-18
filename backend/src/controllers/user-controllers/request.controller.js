@@ -241,7 +241,13 @@ const acceptRequest = asyncHandler(async (req, res) => {
   sendData(isSender.socketId, "tran", notify[0]);
   sendData(user.socketId, "tran", notify[1]);
 
-  res.status(200).json({ message: "Money request Approved.", request });
+  res
+    .status(200)
+    .json({
+      message: "Money request Approved.",
+      request,
+      transaction: successTran,
+    });
 });
 
 /**
