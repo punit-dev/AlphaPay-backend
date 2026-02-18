@@ -75,7 +75,9 @@ const getRequests = asyncHandler(async (req, res) => {
   const { len, reqId } = req.query;
 
   if (reqId) {
-    const request = await RequestModel.findById(reqId);
+    const request = await RequestModel.findById(reqId)
+      .populate("senderId", "username upiId profilePic fullname")
+      .populate("payerId", "username upiId profilePic fullname");
     return res.status(200).json({ message: "Fetch Request", request });
   }
 
