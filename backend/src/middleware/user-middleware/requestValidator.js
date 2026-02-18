@@ -23,9 +23,6 @@ const getRequestValidator = [
 
 const acceptRequestValidator = [
   query("reqId").notEmpty().withMessage("reqId is required."),
-  body("method").isIn(["wallet", "card"]).withMessage("Invalid method"),
-  body("pin").notEmpty().withMessage("UPI pin is required"),
-  body("message").isString().withMessage("message must be valid."),
 ];
 
 const deniedRequestValidator = [

@@ -104,9 +104,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
     throw isNotValid;
   }
 
-  const user = req.user;
   const { reqId } = req.query;
-  const { method, cardId, pin, message } = req.body;
 
   const request = await RequestModel.findByIdAndUpdate(
     reqId,
@@ -118,136 +116,10 @@ const acceptRequest = asyncHandler(async (req, res) => {
     throw new Error("Request not found");
   }
 
-  const isSender = await UserModel.findById(request.senderId);
-  if (!isSender) {
-    res.status(404);
-    throw new Error("Sender not found.");
-  }
-
-  // Wallet balance check
-  if (method === "wallet" && request.amount > user.walletBalance) {
-    res.status(400);
-    throw new Error("Your wallet balance is too low.");
-  }
-
-  // Card payment validation
-  if (method === "card" && !cardId) {
-    res.status(400);
-    throw new Error("Card ID is required for card payments.");
-  }
-
-  const isCard = await CardModel.findById(cardId);
-  if (method == "card" && !isCard) {
-    res.status(404);
-    throw new Error("Card not found.");
-  }
-
-  // Validate UPI Pin
-  if (!(await comparePass(user.upiPin, pin))) {
-    const failedTran = await TransactionModel.create({
-      initiatedBy: "USER",
-      payer: {
-        userRef: user._id,
-        transactionType: "DEBIT",
-      },
-      payee: {
-        name: isSender.fullname,
-        type: "user",
-        userRef: isSender._id,
-        accountOrPhone: isSender.phoneNumber,
-        transactionType: "CREDIT",
-      },
-      amount: request.amount,
-      method: {
-        type: method,
-        cardRef: method == "card" ? isCard._id : null,
-      },
-      status: "FAILED",
-      category: "TRANSFER",
-      message: "Transaction failed.",
-    });
-
-    res.status(400);
-    throw new Error("Transaction failed. Please check details and try again.");
-  }
-
-  // SUCCESS Transaction
-  const successTran = await TransactionModel.create({
-    initiatedBy: "USER",
-    payer: {
-      userRef: user._id,
-      transactionType: "DEBIT",
-    },
-    payee: {
-      name: isSender.fullname,
-      type: "user",
-      userRef: isSender._id,
-      accountOrPhone: isSender.phoneNumber,
-    },
-    amount: request.amount,
-    method: {
-      type: method,
-      cardRef: method == "card" ? isCard._id : null,
-    },
-    status: "SUCCESS",
-    message: message || "Paid",
-    category: "TRANSFER",
+  res.status(200).json({
+    message: "Money request Approved.",
+    request,
   });
-
-  // Deduct wallet amount if wallet used
-  if (method == "wallet") {
-    user.walletBalance -= request.amount;
-  }
-
-  // Update balances
-  isSender.walletBalance += request.amount;
-
-  await Promise.all([user.save(), isSender.save()]);
-
-  const notify = await NotificationModel.insertMany([
-    {
-      userId: isSender._id,
-      type: "transaction",
-      action: "credit",
-      message: `You have received ₹${request.amount} from ${user.fullname}`,
-      data: {
-        transactionId: successTran._id,
-        amount: request.amount,
-        from: user.fullname,
-        to: isSender.fullname,
-        status: successTran.status,
-        transaction: successTran,
-      },
-      balance: isSender.walletBalance,
-    },
-    {
-      userId: user._id,
-      type: "transaction",
-      action: "debit",
-      message: `You sent ₹${request.amount} to ${isSender.fullname}`,
-      data: {
-        transactionId: successTran._id,
-        amount: request.amount,
-        from: user.fullname,
-        to: isSender.fullname,
-        status: successTran.status,
-        transaction: successTran,
-      },
-      balance: user.walletBalance,
-    },
-  ]);
-
-  //push a success transaction notification
-  sendData(isSender.socketId, "tran", notify[0]);
-  sendData(user.socketId, "tran", notify[1]);
-
-  res
-    .status(200)
-    .json({
-      message: "Money request Approved.",
-      request,
-      transaction: successTran,
-    });
 });
 
 /**
