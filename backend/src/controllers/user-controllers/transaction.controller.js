@@ -129,7 +129,7 @@ const userToUserTransaction = asyncHandler(async (req, res) => {
         from: user.fullname,
         to: isPayee.fullname,
         status: successTran.status,
-        transaction: successTran
+        transaction: successTran,
       },
       balance: isPayee.walletBalance,
     },
@@ -144,7 +144,7 @@ const userToUserTransaction = asyncHandler(async (req, res) => {
         from: user.fullname,
         to: isPayee.fullname,
         status: successTran.status,
-        transaction: successTran
+        transaction: successTran,
       },
       balance: user.walletBalance,
     },
@@ -277,7 +277,7 @@ const userToBillTransaction = asyncHandler(async (req, res) => {
       from: user.fullname,
       to: isBill.provider,
       status: successTran.status,
-      transaction: successTran
+      transaction: successTran,
     },
     balance: user.walletBalance,
   });
@@ -384,7 +384,7 @@ const walletRecharge = asyncHandler(async (req, res) => {
       from: user.fullname,
       to: "wallet",
       status: successTran.status,
-      transaction: successTran
+      transaction: successTran,
     },
     balance: user.walletBalance,
   });
