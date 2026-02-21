@@ -169,11 +169,11 @@ const updateUpiPin = asyncHandler(async (req, res) => {
   }
 
   const user = req.user;
-  const { newPin, oldPin } = req.body;
+  const { newPin } = req.body;
 
-  if (!(await comparePass(user.upiPin, oldPin))) {
-    res.status(401);
-    throw new Error("Incorrect old UPI Pin.");
+  if (user.upiPin && (await comparePass(user.upiPin, newPin))) {
+    res.status(400);
+    throw new Error("New UPI pin must be different from the old pin.");
   }
 
   // assign a plain newPin because it will be hashed before saving
