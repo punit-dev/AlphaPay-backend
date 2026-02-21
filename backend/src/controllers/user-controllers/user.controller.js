@@ -70,7 +70,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
   await user.save();
 
-  return res.status(200).json({ message: "User Updated", user });
+  return res.status(200).json({ message: "User Updated", user, otp });
 });
 
 /**
@@ -81,16 +81,16 @@ const updateUser = asyncHandler(async (req, res) => {
 
 const shareProfileAvatarOptions = asyncHandler(async (req, res) => {
   const profileAvatarURLOptions = [
-    "http://localhost:3000/assets/avatar/male1.png",
-    "http://localhost:3000/assets/avatar/female1.png",
-    "http://localhost:3000/assets/avatar/male2.png",
-    "http://localhost:3000/assets/avatar/female2.png",
-    "http://localhost:3000/assets/avatar/male3.png",
-    "http://localhost:3000/assets/avatar/female3.png",
-    "http://localhost:3000/assets/avatar/male4.png",
-    "http://localhost:3000/assets/avatar/female4.png",
-    "http://localhost:3000/assets/avatar/male5.png",
-    "http://localhost:3000/assets/avatar/female5.png",
+    "https://alphapay.onrender.com/assets/avatar/male1.png",
+    "https://alphapay.onrender.com/assets/avatar/female1.png",
+    "https://alphapay.onrender.com/assets/avatar/male2.png",
+    "https://alphapay.onrender.com/assets/avatar/female2.png",
+    "https://alphapay.onrender.com/assets/avatar/male3.png",
+    "https://alphapay.onrender.com/assets/avatar/female3.png",
+    "https://alphapay.onrender.com/assets/avatar/male4.png",
+    "https://alphapay.onrender.com/assets/avatar/female4.png",
+    "https://alphapay.onrender.com/assets/avatar/male5.png",
+    "https://alphapay.onrender.com/assets/avatar/female5.png",
   ];
 
   return res.status(200).json({
@@ -141,12 +141,11 @@ const updatePass = asyncHandler(async (req, res) => {
   }
 
   const user = req.user;
-  const { newPass } = req.body;
+  const { newPass, oldPass } = req.body;
 
-  //compare the updated password to current password
-  if (await comparePass(user.password, newPass)) {
-    res.status(400);
-    throw new Error("New password must be different from the old password.");
+  if (!(await comparePass(user.password, oldPass))) {
+    res.status(401);
+    throw new Error("Incorrect old password.");
   }
 
   // assign a plain newPass because it will be hashed before saving
@@ -170,11 +169,11 @@ const updateUpiPin = asyncHandler(async (req, res) => {
   }
 
   const user = req.user;
-  const { newPin } = req.body;
+  const { newPin, oldPin } = req.body;
 
-  if (user.upiPin && (await comparePass(user.upiPin, newPin))) {
-    res.status(400);
-    throw new Error("New UPI pin must be different from the old pin.");
+  if (!(await comparePass(user.upiPin, oldPin))) {
+    res.status(401);
+    throw new Error("Incorrect old UPI Pin.");
   }
 
   // assign a plain newPin because it will be hashed before saving

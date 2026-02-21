@@ -326,7 +326,7 @@
                   "name": "✅ 200 - Profile Updated",
                   "status": "OK",
                   "code": 200,
-                  "body": "{\n  \"message\": \"User Updated\",\n  \"user\": {\n    \"_id\": \"507f1f77bcf86cd799439011\",\n    \"upiId\": \"johndoe_updated@alphapay\",\n    \"username\": \"johndoe_updated\",\n    \"email\": \"newemail@example.com\",\n    \"fullname\": \"John Doe Updated\",\n    \"phoneNumber\": \"9876543211\",\n    \"dateOfBirth\": \"1990-01-15\",\n    \"isVerifiedEmail\": false,\n    \"isVerifiedPhoneNumber\": false,\n    \"isBlocked\": false,\n    \"profilePic\":\"http://localhost:3000/assets/avatar/male4.png\",\n    \"walletBalance\": 0,\n    \"createdAt\": \"2025-12-11T10:30:00Z\",\n    \"updatedAt\":\"2025-12-11T10:30:00Z\"\n  },\n}"
+                  "body": "{\n  \"message\": \"User Updated\",\n  \"user\": {\n    \"_id\": \"507f1f77bcf86cd799439011\",\n    \"upiId\": \"johndoe_updated@alphapay\",\n    \"username\": \"johndoe_updated\",\n    \"email\": \"newemail@example.com\",\n    \"fullname\": \"John Doe Updated\",\n    \"phoneNumber\": \"9876543211\",\n    \"dateOfBirth\": \"1990-01-15\",\n    \"isVerifiedEmail\": false,\n    \"isVerifiedPhoneNumber\": false,\n    \"isBlocked\": false,\n    \"profilePic\":\"http://localhost:3000/assets/avatar/male4.png\",\n    \"walletBalance\": 0,\n    \"createdAt\": \"2025-12-11T10:30:00Z\",\n    \"updatedAt\":\"2025-12-11T10:30:00Z\"\n  },\n    \"otp\":\"123456\"\n}"
                 },
                 {
                   "name": "❌ 400 - Username Already in Use",
@@ -365,7 +365,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"newPass\": \"NewSecurePass123\"\n}"
+                  "raw": "{\n    \"newPass\": \"NewSecurePass123\",    \"oldPass\": \"OldSecurePass123\"\n}"
                 },
                 "url": {
                   "raw": "http://localhost:3000/api/v1/users/update-pass",
@@ -414,7 +414,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"newPin\": \"123456\"\n}"
+                  "raw": "{\n  \"newPin\": \"123456\"    \"oldPin\": \"678901\"\n}"
                 },
                 "url": {
                   "raw": "http://localhost:3000/api/v1/users/update-pin",
