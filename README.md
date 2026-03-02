@@ -2,7 +2,9 @@
 
 _A secure and modern digital payment backend built with Node.js, Express, MongoDB, and JWT._<br><br>
 AlphaPay is a full-featured backend system that simulates real-world digital payments (similar to UPI apps). It includes secure authentication, wallet management, transaction handling, bill payments, admin dashboard.
-> Live links: <br>  Frontend: https://alphapay-three.vercel.app <br>  Backend: https://alphapay.onrender.com
+> Live links-
+> - Frontend: https://alphapay-three.vercel.app
+> - Backend: https://alphapay.onrender.com
 
 ---
 
